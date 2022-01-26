@@ -41,6 +41,25 @@ def main():
     )
     borrow_tx.wait(1)
     print("DAI has been borrowed\n", get_borrowable_data(lending_pool, account))
+    repay_all(AMOUNT, lending_pool, account)
+
+
+def repay_all(_amount, _lending_pool, _account):
+    approve_erc20(
+        _amount,
+        _lending_pool,
+        config["networks"][network.show_active()]["dai_token_address"],
+        _account,
+    )
+    repay_tx = _lending_pool.repay(
+        config["networks"][network.show_active()]["dai_token_address"],
+        _amount,
+        1,
+        _account.address,
+        {"from": _account},
+    )
+    repay_tx.wait(1)
+    print("You just repayed!")
 
 
 def get_asset_price(_price_feed_address):
